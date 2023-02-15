@@ -1,11 +1,14 @@
 # Adresse IP et port du serveur DNS
 import socket
 
-import requests as requests
+import dnslib
+import requests
+from dns.resolver import Resolver
 
 URL_API_IS_MALICIOUS = "https://glocxf7xk5woaooszd4m6uh4rm0qrcrk.lambda-url.eu-west-1.on.aws/"
 IP_ADDRESS = "127.0.0.1"
 PORT = 53
+MAX_RETRIES = 2
 
 
 def is_alphabetical(char):
@@ -16,21 +19,30 @@ def is_surround_by_alphabetical(string, index_char):
     return is_alphabetical(string[index_char - 1]) and is_alphabetical(string[index_char + 1])
 
 
-def clean_string(string):
-    new_string = ""
-    for index_char in range(len(string)):
-        if is_alphabetical(string[index_char]):
-            new_string += string[index_char]
-        elif is_surround_by_alphabetical(string, index_char):
-            new_string += "."
-    return new_string
+def clean_string(data):
+    return str(dnslib.DNSRecord.parse(data).q.qname)
+
+
+def post_request(data, headers):
+    resolver = Resolver()
+    resolver.nameservers = ["8.8.8.8", "8.8.4.4", "1.1.1.1"]
+    ip = resolver.resolve(URL_API_IS_MALICIOUS, "A")[0].to_text()  # get the IP address of the URL
+    response = requests.post(ip, data=data, headers=headers)
+    return response.json()
 
 
 def ask_lambda_if_malicious(url):
     data = {"url": url}
     headers = {"Content-Type": "application/json", "dataType": "json"}
-    response = requests.post(URL_API_IS_MALICIOUS, json=data, headers=headers)
-    return response.json()["malicious"]
+    for _ in range(MAX_RETRIES):
+        try:
+            response = requests.post(URL_API_IS_MALICIOUS, json=data, headers=headers)
+            # return post_request(data, headers).json()["malicious"]
+            return response.json()["malicious"]
+        except Exception as e:
+            print("fonctionne pas")
+            # print(f"Erreur lors de la requête à l'API {URL_API_IS_MALICIOUS}'")
+            print(e)
 
 
 if __name__ == "__main__":
@@ -43,17 +55,15 @@ if __name__ == "__main__":
         data, address = server_socket.recvfrom(1024)
 
         # Analyse de la requête DNS
-        domain = clean_string(data.decode())
+        domain = clean_string(data)
         print(domain)
 
-        # Si la requête concerne google.com, renvoyer une réponse d'erreur
-        if ask_lambda_if_malicious(domain):
-            print("REFUSED")
-            continue
-        else:
-            print("OK")
-            # Si la requête concerne un autre domaine, faire suivre la requête au serveur DNS réel
+        # if domain != URL_API_IS_MALICIOUS and ask_lambda_if_malicious(domain):
+        #     print("REFUSED")
+        #     continue
+        # else:
+        #     print("OK")
         real_dns = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         real_dns.sendto(data, ("8.8.8.8", 53))
         response = real_dns.recv(1024)
-        server_socket.sendto(response, address)
+        real_dns.sendto(response, address)

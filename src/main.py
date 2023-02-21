@@ -46,7 +46,7 @@ def ask_lambda_if_malicious(url):
             print(e)
 
 
-if __name__ == "__main__":
+def launch_dns():
     # Création d'un socket serveur
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind((IP_ADDRESS, PORT))
@@ -59,12 +59,16 @@ if __name__ == "__main__":
         domain = clean_string(data)
         print(domain)
 
-        if ask_lambda_if_malicious(domain):
-            print("REFUSED")
-            continue
-        else:
-            print("OK")
+        # if ask_lambda_if_malicious(domain):
+        #     print("REFUSED")
+        #     continue
+        # else:
+        #     print("OK")
         real_dns = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         real_dns.sendto(data, ("8.8.8.8", 53))
         response = real_dns.recv(1024)
         real_dns.sendto(response, address)
+
+
+if __name__ == "__main__":
+    launch_dns()

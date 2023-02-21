@@ -9,6 +9,7 @@ URL_API_IS_MALICIOUS = "https://glocxf7xk5woaooszd4m6uh4rm0qrcrk.lambda-url.eu-w
 IP_ADDRESS = "127.0.0.1"
 PORT = 53
 MAX_RETRIES = 2
+GOOGLE_DNS = "8.8.8.8:53"
 
 
 def is_alphabetical(char):
@@ -58,11 +59,11 @@ if __name__ == "__main__":
         domain = clean_string(data)
         print(domain)
 
-        # if domain != URL_API_IS_MALICIOUS and ask_lambda_if_malicious(domain):
-        #     print("REFUSED")
-        #     continue
-        # else:
-        #     print("OK")
+        if ask_lambda_if_malicious(domain):
+            print("REFUSED")
+            continue
+        else:
+            print("OK")
         real_dns = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         real_dns.sendto(data, ("8.8.8.8", 53))
         response = real_dns.recv(1024)

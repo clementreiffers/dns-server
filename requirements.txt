@@ -1,3 +1,6 @@
 sockets
 requests~=2.28.2
-dnslib
+dnslib~=0.9.23
+pyinstaller
+PyQt5~=5.15.9
+dnspython~=2.3.0

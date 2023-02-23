@@ -8,6 +8,7 @@ def is_admin():
 
 
 def change_dns(dns):
+    print(f"changing dns to {dns}...")
     os.system(f'netsh interface ip set dns name="Wi-Fi" static {dns}')
 
 

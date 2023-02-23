@@ -5,5 +5,5 @@ __pychache__
 build
 dist
 tmp
+./login/
 *.json
-login

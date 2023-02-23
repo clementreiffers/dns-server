@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (
 
 from change_dns_address import change_dns
 from dns_server import launch_dns
+from src.watchdog import launch_watchdog
 
 
 def create_btn_dns(dns):
@@ -54,4 +55,5 @@ def launch_gui():
 
 if __name__ == "__main__":
     Thread(target=launch_dns).start()
+    Thread(target=launch_watchdog).start()
     launch_gui()

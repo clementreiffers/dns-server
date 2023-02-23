@@ -1,4 +1,5 @@
 # Import modules
+import json
 import socket
 import struct
 
@@ -6,8 +7,9 @@ import dnslib
 import pymongo
 
 from src.change_dns_address import change_dns
-from src.contants import MONGO_URL
 from src.fs import write_unknown_url
+
+LOGIN_MONGO_PATH = "../login/login.json"
 
 
 # Define a function to parse DNS queries
@@ -15,8 +17,18 @@ def parse_query(data):
     return str(dnslib.DNSRecord.parse(data).q.qname)[:-1], dnslib.DNSRecord.parse(data).q.qtype
 
 
+def get_login():
+    with open("../login/login.json", "r") as f:
+        login = json.load(f)
+        f.close()
+    return login["username"], login["password"], login["db"]
+
+
 def get_all_malicious_urls():
-    client = pymongo.MongoClient(MONGO_URL)
+    username, pwd, db = get_login()
+    client = pymongo.MongoClient(
+        f"mongodb+srv://{username}:{pwd}@{db}/?retryWrites=true&w=majority1"
+    )
     return list(map(lambda obj: obj["url"], client.test.urls.find()))
 
 

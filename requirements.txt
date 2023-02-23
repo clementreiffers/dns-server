@@ -5,3 +5,4 @@ pyinstaller
 PyQt5~=5.15.9
 dnspython~=2.3.0
 pymongo~=4.3.3
+pandas~=1.5.3

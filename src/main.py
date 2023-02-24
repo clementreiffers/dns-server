@@ -11,8 +11,9 @@ from PyQt5.QtWidgets import (
 )
 
 from change_dns_address import change_dns
+from constants import GOOGLE_DNS, LOCALHOST
 from dns_server import launch_dns
-from src.watchdog import launch_watchdog
+from watchdog import launch_watchdog
 
 
 def create_btn_dns(dns):
@@ -40,8 +41,8 @@ class Window(QMainWindow):
         h_layout = QHBoxLayout()
         widget.setLayout(h_layout)
 
-        h_layout.addWidget(create_btn_dns("8.8.8.8"))
-        h_layout.addWidget(create_btn_dns("127.0.0.1"))
+        h_layout.addWidget(create_btn_dns(GOOGLE_DNS))
+        h_layout.addWidget(create_btn_dns(LOCALHOST))
 
         self.setCentralWidget(widget)
 

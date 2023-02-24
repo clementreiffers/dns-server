@@ -1,7 +1,7 @@
 import time
 
-from src.change_dns_address import change_dns
-from src.fs import TMP_DIR
+from change_dns_address import change_dns
+from constants import GOOGLE_DNS, LOCALHOST, TMP_URL
 
 
 def launch_watchdog():
@@ -10,9 +10,9 @@ def launch_watchdog():
     while True:
         if time.time() - start > 5:
             start = time.time()
-            change_dns("8.8.8.8")
-            with open(f"{TMP_DIR}unknown_urls.txt", "r") as f:
+            change_dns(GOOGLE_DNS)
+            with open(TMP_URL, "r") as f:
                 data = f.read()
             # todo: make post request to send data
             # todo: empty the tmp file
-            change_dns("127.0.0.1")
+            change_dns(LOCALHOST)

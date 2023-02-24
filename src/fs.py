@@ -1,11 +1,11 @@
 import os
 
-TMP_DIR = "../tmp/"
+from constants import TMP_DIR, TMP_URL
 
 
 def write_unknown_url(url):
     create_file_if_not_exist(TMP_DIR)
-    with open(f"{TMP_DIR}unknown_urls.txt", "a") as f:
+    with open(TMP_URL, "a") as f:
         f.write(url + "\n")
 
 

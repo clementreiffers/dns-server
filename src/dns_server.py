@@ -6,10 +6,9 @@ import struct
 import dnslib
 import pymongo
 
-from src.change_dns_address import change_dns
-from src.fs import write_unknown_url
-
-LOGIN_MONGO_PATH = "../login/login.json"
+from change_dns_address import change_dns
+from constants import LOGIN_MONGO_PATH, GOOGLE_DNS
+from fs import write_unknown_url
 
 
 # Define a function to parse DNS queries
@@ -18,7 +17,7 @@ def parse_query(data):
 
 
 def get_login():
-    with open("../login/login.json", "r") as f:
+    with open(LOGIN_MONGO_PATH, "r") as f:
         login = json.load(f)
         f.close()
     return login["username"], login["password"], login["db"]
@@ -52,7 +51,7 @@ def build_response(qname, qtype, rcode):
 
 
 def launch_dns():
-    change_dns("8.8.8.8")
+    change_dns(GOOGLE_DNS)
     malicious_url_list = get_all_malicious_urls()
     # Create a UDP socket with localhost address and port 53
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -80,7 +79,7 @@ def launch_dns():
             write_unknown_url(qname)
             # Forward the request to Google DNS servers (8.8.8.8 or 8.8.4.4)
             proxy_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            proxy_sock.sendto(data, ("8.8.8.8", 53))
+            proxy_sock.sendto(data, (GOOGLE_DNS, 53))
             proxy_data, proxy_addr = proxy_sock.recvfrom(512)
             proxy_sock.sendto(proxy_data, addr)
 

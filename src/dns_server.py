@@ -1,34 +1,18 @@
 # Import modules
-import json
 import socket
 import struct
 
 import dnslib
-import pymongo
 
 from change_dns_address import change_dns
-from constants import LOGIN_MONGO_PATH, GOOGLE_DNS
+from constants import GOOGLE_DNS
 from fs import write_unknown_url
+from mongo import get_all_malicious_urls
 
 
 # Define a function to parse DNS queries
 def parse_query(data):
     return str(dnslib.DNSRecord.parse(data).q.qname)[:-1], dnslib.DNSRecord.parse(data).q.qtype
-
-
-def get_login():
-    with open(LOGIN_MONGO_PATH, "r") as f:
-        login = json.load(f)
-        f.close()
-    return login["username"], login["password"], login["db"]
-
-
-def get_all_malicious_urls():
-    username, pwd, db = get_login()
-    client = pymongo.MongoClient(
-        f"mongodb+srv://{username}:{pwd}@{db}/?retryWrites=true&w=majority1"
-    )
-    return list(map(lambda obj: obj["url"], client.test.urls.find()))
 
 
 # Define a function to build DNS responses
@@ -56,7 +40,7 @@ def launch_dns():
     # Create a UDP socket with localhost address and port 53
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("localhost", 53))
-
+    print("dns listening...")
     # Start listening for incoming queries
     while True:
         # Receive data from client and get client address

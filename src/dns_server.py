@@ -6,7 +6,7 @@ import dnslib
 
 from change_dns_address import change_dns
 from constants import GOOGLE_DNS
-from fs import write_unknown_url
+from fs import write_unknown_url, set_state_dns
 from mongo import get_all_malicious_urls
 
 
@@ -40,6 +40,9 @@ def launch_dns():
     # Create a UDP socket with localhost address and port 53
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("localhost", 53))
+
+    set_state_dns(True)
+
     print("dns listening...")
     # Start listening for incoming queries
     while True:

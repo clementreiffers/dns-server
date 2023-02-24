@@ -1,5 +1,7 @@
 TMP_DIR = "../tmp/"
 TMP_URL = f"{TMP_DIR}unknown_urls.txt"
+TMP_STATE = f"{TMP_DIR}state.json"
+
 
 LOGIN_MONGO_PATH = "../login/login.json"
 

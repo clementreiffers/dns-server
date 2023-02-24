@@ -15,7 +15,7 @@ def get_mongo_client():
 
 
 def get_all_malicious_urls():
-    return list(map(lambda obj: obj["url"], get_mongo_client()["test"].urls.find()))
+    return list(map(lambda obj: obj["url"], get_mongo_client()["malicious_url"].urls.find()))
 
 
 def insert_many_url_to_analyze(list_url):

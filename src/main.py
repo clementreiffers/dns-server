@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
 from change_dns_address import change_dns
 from constants import GOOGLE_DNS, LOCALHOST
 from dns_server import launch_dns
-from fs import read_state_dns
+from fs import read_state_dns, set_state_dns
 from watchdog import launch_watchdog
 
 
@@ -35,6 +35,11 @@ def change_dns_and_invoke_window(dns):
     msg.exec()
 
 
+def kill_app():
+    set_state_dns(False)
+    exit(0)
+
+
 class Window(QMainWindow):
     def __init__(self):
         """Initializer."""
@@ -51,7 +56,7 @@ class Window(QMainWindow):
         v_layout.addLayout(h_layout)
 
         exit_btn = QPushButton("EXIT")
-        exit_btn.clicked.connect(lambda: exit(0))
+        exit_btn.clicked.connect(kill_app)
         v_layout.addWidget(exit_btn)
 
         h_layout.addWidget(create_btn_dns(GOOGLE_DNS))

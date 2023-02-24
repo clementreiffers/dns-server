@@ -7,3 +7,4 @@ dist
 tmp
 ./login/
 *.json
+src/__pycache__

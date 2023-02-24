@@ -1,8 +1,11 @@
 install:
-	python3 -m pip install -r requirements.txt
+	python -m pip install -r requirements.txt
 
 run:
-	python3 main.py
+	python main.py
 
-build:
-	docker build .
+build-app:
+	pyinstaller  src/main.py --uac-admin
+
+clean:
+	rm *.spec

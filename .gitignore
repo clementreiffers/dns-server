@@ -1,4 +1,9 @@
 venv
 .idea
-__pychache__
-
+__pycache__
+*.spec
+build
+dist
+tmp
+./login/
+*.json

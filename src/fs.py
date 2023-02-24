@@ -39,9 +39,15 @@ def create_file_if_not_exist(path):
         os.makedirs(path)
 
 
-def set_state_dns(boolean):
+def set_state_dns_listening(boolean):
     state = read_json(TMP_STATE)
     state["listening"] = boolean
+    write_json_file(TMP_STATE, state)
+
+
+def set_state_dns_choosen(dns_choosen):
+    state = read_json(TMP_STATE)
+    state["dns_choosen"] = dns_choosen
     write_json_file(TMP_STATE, state)
 
 

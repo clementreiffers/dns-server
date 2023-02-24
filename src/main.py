@@ -12,9 +12,9 @@ from PyQt5.QtWidgets import (
 )
 
 from change_dns_address import change_dns
-from constants import GOOGLE_DNS, LOCALHOST
+from constants import GOOGLE_DNS, LOCALHOST, TMP_STATE
 from dns_server import launch_dns
-from fs import read_state_dns, set_state_dns
+from fs import read_state_dns, set_state_dns_listening, set_state_dns_choosen, write_json_file
 from watchdog import launch_watchdog
 
 
@@ -25,6 +25,7 @@ def create_btn_dns(dns):
 
 
 def change_dns_and_invoke_window(dns):
+    set_state_dns_choosen(dns)
     # wait until the dns is listening
     if dns == LOCALHOST:
         while read_state_dns()["listening"]:
@@ -36,14 +37,16 @@ def change_dns_and_invoke_window(dns):
 
 
 def kill_app():
-    set_state_dns(False)
+    set_state_dns_listening(False)
     exit(0)
 
 
 class Window(QMainWindow):
     def __init__(self):
-        """Initializer."""
         super().__init__()
+
+        write_json_file(TMP_STATE, {"dns_choosen": GOOGLE_DNS, "listening": False})
+
         self.setWindowTitle("Python DNS changing!")
         self.resize(400, 200)
 

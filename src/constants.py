@@ -8,3 +8,6 @@ GOOGLE_DNS = "8.8.8.8"
 LOCALHOST = "127.0.0.1"
 
 CLOCK = 60 * 15  # 15 minutes
+
+MALICIOUS = "malicious_urls"
+UNKNOWN = "unknown_urls"

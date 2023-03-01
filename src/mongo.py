@@ -1,6 +1,6 @@
 import pymongo
 
-from constants import LOGIN_MONGO_PATH
+from constants import LOGIN_MONGO_PATH, MALICIOUS, UNKNOWN
 from fs import read_json
 
 
@@ -15,11 +15,11 @@ def get_mongo_client():
 
 
 def get_all_malicious_urls():
-    return list(map(lambda obj: obj["url"], get_mongo_client()["malicious_url"].urls.find()))
+    return list(map(lambda obj: obj["url"], get_mongo_client()[MALICIOUS].urls.find()))
 
 
 def insert_many_url_to_analyze(list_url):
-    return get_mongo_client().url_to_analyze.urls.insert_many(convert_list_url_to_obj_url(list_url))
+    return get_mongo_client()[UNKNOWN].urls.insert_many(convert_list_url_to_obj_url(list_url))
 
 
 def convert_list_url_to_obj_url(list_url):

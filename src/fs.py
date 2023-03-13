@@ -12,7 +12,9 @@ def read_file(filename):
 def read_json(filename):
     if os.path.exists(filename):
         with open(filename, "r") as f:
-            return json.load(f)
+            data = json.load(f)
+            f.close()
+            return data
     return {}
 
 

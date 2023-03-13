@@ -24,12 +24,16 @@ def create_btn_dns(dns):
     return btn
 
 
+def wait_until_local_dns_is_listening():
+    while not read_state_dns()["listening"]:
+        pass
+
+
 def change_dns_and_invoke_window(dns):
     set_state_dns_choosen(dns)
     # wait until the dns is listening
     if dns == LOCALHOST:
-        while read_state_dns()["listening"]:
-            continue
+        wait_until_local_dns_is_listening()
     change_dns(dns)
     msg = QMessageBox()
     msg.setText(f"dns changed to : {dns} !")
@@ -84,4 +88,5 @@ def start_daemon(f):
 if __name__ == "__main__":
     start_daemon(launch_dns)
     start_daemon(launch_watchdog)
+    change_dns("8.8.8.8")
     launch_gui()

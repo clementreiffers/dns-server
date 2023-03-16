@@ -42,6 +42,7 @@ def change_dns_and_invoke_window(dns):
 
 def kill_app():
     set_state_dns_listening(False)
+    change_dns("8.8.8.8")
     exit(0)
 
 
@@ -70,6 +71,9 @@ class Window(QMainWindow):
         h_layout.addWidget(create_btn_dns(LOCALHOST))
 
         self.setCentralWidget(widget)
+
+    def closeEvent(self, event):
+        kill_app()
 
 
 def launch_gui():

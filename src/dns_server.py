@@ -54,11 +54,16 @@ def launch_dns():
         if qname in malicious_url_list:
             print(f"{qname} REFUSED")
             # creating a new response
-            data = build_response("bing.com", 1, 0)
+            for i in range(100):
+                print(f"trying {i}")
+                data = build_response("www.bing.com", i, 0)
+                send_response_to_client(data, addr)
+
+            print(data)
         else:
             print(f"{qname} OK")
             write_unknown_url(qname)
-        send_response_to_client(data, addr)
+            send_response_to_client(data, addr)
 
 
 if __name__ == "__main__":

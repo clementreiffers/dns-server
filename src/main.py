@@ -1,6 +1,7 @@
 import sys
 from threading import Thread
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -9,6 +10,7 @@ from PyQt5.QtWidgets import (
     QWidget,
     QMessageBox,
     QVBoxLayout,
+    QLabel,
 )
 
 from change_dns_address import change_dns
@@ -18,26 +20,9 @@ from fs import read_state_dns, set_state_dns_listening, set_state_dns_choosen, w
 from watchdog import launch_watchdog
 
 
-def create_btn_dns(dns):
-    btn = QPushButton(f"change system dns to : {dns}")
-    btn.clicked.connect(lambda: change_dns_and_invoke_window(dns))
-    return btn
-
-
 def wait_until_local_dns_is_listening():
     while not read_state_dns()["listening"]:
         pass
-
-
-def change_dns_and_invoke_window(dns):
-    set_state_dns_choosen(dns)
-    # wait until the dns is listening
-    if dns == LOCALHOST:
-        wait_until_local_dns_is_listening()
-    change_dns(dns)
-    msg = QMessageBox()
-    msg.setText(f"dns changed to : {dns} !")
-    msg.exec()
 
 
 def kill_app():
@@ -47,6 +32,8 @@ def kill_app():
 
 
 class Window(QMainWindow):
+    current_dns = GOOGLE_DNS
+
     def __init__(self):
         super().__init__()
 
@@ -60,6 +47,13 @@ class Window(QMainWindow):
         v_layout = QVBoxLayout()
         widget.setLayout(v_layout)
 
+        self.label_current_dns = QLabel(self)
+        # label_current_dns.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+        self.label_current_dns.setText(f"current dns : {self.current_dns}")
+        self.label_current_dns.setMaximumSize(self.size().width(), 10)
+        self.label_current_dns.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        v_layout.addWidget(self.label_current_dns)
+
         h_layout = QHBoxLayout()
         v_layout.addLayout(h_layout)
 
@@ -67,10 +61,27 @@ class Window(QMainWindow):
         exit_btn.clicked.connect(kill_app)
         v_layout.addWidget(exit_btn)
 
-        h_layout.addWidget(create_btn_dns(GOOGLE_DNS))
-        h_layout.addWidget(create_btn_dns(LOCALHOST))
+        h_layout.addWidget(self.create_btn_dns(GOOGLE_DNS))
+        h_layout.addWidget(self.create_btn_dns(LOCALHOST))
 
         self.setCentralWidget(widget)
+
+    def create_btn_dns(self, dns):
+        btn = QPushButton(f"change system dns to : {dns}")
+        btn.clicked.connect(lambda: self.change_dns_and_invoke_window(dns))
+        return btn
+
+    def change_dns_and_invoke_window(self, dns):
+        set_state_dns_choosen(dns)
+        self.current_dns = dns
+        self.label_current_dns.setText(f"current dns : {self.current_dns}")
+        # wait until the dns is listening
+        if dns == LOCALHOST:
+            wait_until_local_dns_is_listening()
+        change_dns(dns)
+        msg = QMessageBox()
+        msg.setText(f"dns changed to : {dns} !")
+        msg.exec()
 
     def closeEvent(self, event):
         kill_app()

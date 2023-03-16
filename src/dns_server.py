@@ -53,13 +53,15 @@ def launch_dns():
         # Check if the query name is in lambda
         if qname in malicious_url_list:
             print(f"{qname} REFUSED")
-            # creating a new response
-            for i in range(100):
-                print(f"trying {i}")
-                data = build_response("www.bing.com", i, 0)
-                send_response_to_client(data, addr)
-
-            print(data)
+            id, flags, qdcount, ancount, nscount, arcount = struct.unpack("!HHHHHH", data[:12])
+            # Check if it is a standard query for A record
+            # Pack the response header with same id and QR=1, AA=1, RA=1 flags
+            header = struct.pack("!HHHHHH", id, 0x8500, qdcount, 1, 0, 0)
+            # Pack the answer section with name pointer to query name and A record with TTL=60 and google_ip
+            answer = struct.pack("!HHHLH4s", 0xC00C, 1, 1, 60, 4, socket.inet_aton("104.18.34.67"))
+            # Send the response back to the client
+            sock.sendto(header + data[12:] + answer, addr)
+            continue
         else:
             print(f"{qname} OK")
             write_unknown_url(qname)

@@ -11,30 +11,25 @@ permissions:
 
 jobs:
   build-windows:
-    name: Build Windows
+    name: Build windows
     runs-on: windows-latest
     steps:
-    - name: Checkout code
-    - uses: actions/checkout@v3
-    
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Build App
-      run: pyinstaller --onefile  src/main.py --icon=images/logo.ico --noconsole --uac-admin
-
-    - name: Upload Windows Build
-      uses: actions/upload-artifact@v2
-      with:
-        name: artifact-windows
-        path: ./dist/main.exe
+      - name: Checkout code 🔍
+        uses: actions/checkout@v2
+      - name: Installing dependencies 🛠️
+        run: |
+            python -m pip install --upgrade pip
+            python -m pip install -r requirements.txt
+      - name: Building Projects ⚙️
+        run: |
+          pyinstaller --onefile  src/main.py --icon=images/logo.ico --noconsole --uac-admin
+      - name: Copy exe to root ✨
+        run: cp ./dist/main.exe ./AsgarDNS
+      - name: Upload artifact release 🚀
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact-windows
+          path: ./AsgarDNS
   
 
 

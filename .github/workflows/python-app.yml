@@ -96,7 +96,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          upload_url: {{ steps.create-new-release.outputs.upload_url }}
+          upload_url: ${{ steps.create-new-release.outputs.upload_url }}
           asset_path: ./AsgarDNS.exe
           asset_name: AsgarDNS-v${{ github.run_number }}.exe
           asset_content_type: application/octet-stream

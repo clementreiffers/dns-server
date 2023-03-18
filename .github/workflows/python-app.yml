@@ -25,12 +25,12 @@ jobs:
       - name: Building Projects ⚙️
         run: make build-app
       - name: Copy exe to root ✨
-        run: cp ./dist/main.exe ./AsgarDNS.exe
+        run: cp ./dist/main.exe ./AsgarDNS-Windows.exe
       - name: Upload artifact release 🚀
         uses: actions/upload-artifact@v2
         with:
           name: artifact-windows
-          path: ./AsgarDNS.exe
+          path: ./AsgarDNS-Windows.exe
   
   build-ubuntu:
     name: Build ubuntu
@@ -45,12 +45,12 @@ jobs:
       - name: Building projects ⚙️
         run: make build-app
       - name: Copy exe to root ✨
-        run: cp ./dist/main ./AsgarDNS
+        run: cp ./dist/main ./AsgarDNS-Ubuntu
       - name: Upload artifact release 🚀
         uses: actions/upload-artifact@v2
         with:
           name: artifact-ubuntu
-          path: ./AsgarDNS
+          path: ./AsgarDNS-Ubuntu
 
   build-macos:
     name: Build macos
@@ -65,22 +65,32 @@ jobs:
       - name: Building projects ⚙️
         run: make macos-build-app
       - name: Copy exe to root ✨
-        run: cp ./dist/main ./AsgarDNS
+        run: cp ./dist/main ./AsgarDNS-MacOS
       - name: Upload artifact release 🚀
         uses: actions/upload-artifact@v2
         with:
           name: artifact-macos
-          path: ./AsgarDNS
+          path: ./AsgarDNS-MacOS
 
   release-project:
     name: Release project
     runs-on: ubuntu-latest
-    needs: [ build-windows ]
+    needs: [ build-windows, build-macos, build-ubuntu ]
     steps:
-      - name: Download windows artifact content ⬇️
+      - name: Download Windows artifact content ⬇️
         uses: actions/download-artifact@v2
         with:
           name: artifact-windows
+
+      - name: Download MacOS artifact content ⬇️
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact-macos
+
+      - name: Download Ubuntu artifact content ⬇️
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact-ubuntu
 
       - name: Creating Release ✏️
         uses: actions/create-release@v1
@@ -97,6 +107,26 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./AsgarDNS.exe
-          asset_name: AsgarDNS-v${{ github.run_number }}.exe
+          asset_path: ./AsgarDNS-Windows.exe
+          asset_name: AsgarDNS-Windows-v${{ github.run_number }}.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload MacoOS Release 🚀
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./AsgarDNS-MacOS
+          asset_name: AsgarDNS-MacOS-v${{ github.run_number }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload Ubuntu Release 🚀
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./AsgarDNS-Ubuntu
+          asset_name: AsgarDNS-Ubuntu-v${{ github.run_number }}
           asset_content_type: application/octet-stream

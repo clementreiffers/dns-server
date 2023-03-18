@@ -8,5 +8,8 @@ run:
 build-app:
 	pyinstaller --onefile  src/main.py --icon=images/logo.ico --noconsole --uac-admin
 
+macos-build-app:
+	pyinstaller --onefile  src/main.py --icon=images/logo.icns --noconsole --uac-admin
+
 clean:
 	rm *.spec

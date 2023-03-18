@@ -7,4 +7,3 @@ dnspython
 pymongo
 pandas
 pyinstaller
-Pillow

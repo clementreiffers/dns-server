@@ -63,7 +63,7 @@ jobs:
       - name: Installing dependencies 🛠️
         run: make install
       - name: Building projects ⚙️
-        run: make build-app
+        run: make macos-build-app
       - name: Copy exe to root ✨
         run: cp ./dist/main ./AsgarDNS
       - name: Upload artifact release 🚀

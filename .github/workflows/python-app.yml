@@ -1,7 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
-name: Creating Python App 
+name: Creating Python App
 
 on:
   push:
@@ -10,10 +7,11 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-windows:
+    name: Build Windows
     runs-on: windows-latest
     steps:
     - name: Checkout code
@@ -28,8 +26,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pyinstaller --onefile  src/main.py --icon=images/logo.ico --noconsole --uac-admin
-    
+
+    - name: Build App
+      run: pyinstaller --onefile  src/main.py --icon=images/logo.ico --noconsole --uac-admin
+
     - name: Upload Windows Build
       uses: actions/upload-artifact@v2
       with:

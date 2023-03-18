@@ -18,8 +18,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Installing Chocolatey ⬇️
         run: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-      - name: Installing Make & Python3⬇️
-        run: choco install make python3
+      - name: Installing Python3 ⬇️
+        run: choco install python3
+      - name: Installing Make ⬇️
+        run: choco install make
       - name: Installing dependencies 🛠️
         run: make install
       - name: Building Projects ⚙️
@@ -59,7 +61,9 @@ jobs:
       - name: Checkout code 🔍
         uses: actions/checkout@v2
       - name: Installing Make ⬇️
-        run: brew install make python3
+        run: brew install make
+      - name: Installing Python3 ⬇️
+        run: brew install python3
       - name: Installing dependencies 🛠️
         run: make install
       - name: Building projects ⚙️

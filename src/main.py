@@ -2,6 +2,7 @@ import sys
 from threading import Thread
 
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -39,6 +40,7 @@ class Window(QMainWindow):
 
         write_json_file(TMP_STATE, {"dns_choosen": GOOGLE_DNS, "listening": False})
 
+        self.setWindowIcon(QIcon("../images/icon.ico"))
         self.setWindowTitle("Python DNS changing!")
         self.resize(400, 200)
 

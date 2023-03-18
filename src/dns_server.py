@@ -53,6 +53,7 @@ def launch_dns():
         # Check if the query name is in lambda
         if qname in malicious_url_list:
             print(f"{qname} REFUSED")
+            continue
             id, flags, qdcount, ancount, nscount, arcount = struct.unpack("!HHHHHH", data[:12])
             # Check if it is a standard query for A record
             # Pack the response header with same id and QR=1, AA=1, RA=1 flags

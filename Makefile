@@ -5,7 +5,7 @@ run:
 	python main.py
 
 build-app:
-	pyinstaller  src/main.py --uac-admin
+	pyinstaller --onefile  src/main.py --icon=images/logo.ico --noconsole --uac-admin
 
 clean:
 	rm *.spec

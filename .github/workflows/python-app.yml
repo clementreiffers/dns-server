@@ -25,12 +25,12 @@ jobs:
       - name: Building Projects ⚙️
         run: make build-app
       - name: Copy exe to root ✨
-        run: cp ./dist/main.exe ./AsgarDNS-Windows.exe
+        run: cp ./dist/main.exe ./login-Windows.exe
       - name: Upload artifact release 🚀
         uses: actions/upload-artifact@v2
         with:
           name: artifact-windows
-          path: ./AsgarDNS-Windows.exe
+          path: ./login-Windows.exe
   
   build-ubuntu:
     name: Build ubuntu
@@ -45,12 +45,12 @@ jobs:
       - name: Building projects ⚙️
         run: make build-app
       - name: Copy exe to root ✨
-        run: cp ./dist/main ./AsgarDNS-Ubuntu
+        run: cp ./dist/main ./login-Ubuntu
       - name: Upload artifact release 🚀
         uses: actions/upload-artifact@v2
         with:
           name: artifact-ubuntu
-          path: ./AsgarDNS-Ubuntu
+          path: ./login-Ubuntu
 
   build-macos:
     name: Build macos
@@ -65,12 +65,12 @@ jobs:
       - name: Building projects ⚙️
         run: make macos-build-app
       - name: Copy exe to root ✨
-        run: cp ./dist/main ./AsgarDNS-MacOS
+        run: cp ./dist/main ./login-MacOS
       - name: Upload artifact release 🚀
         uses: actions/upload-artifact@v2
         with:
           name: artifact-macos
-          path: ./AsgarDNS-MacOS
+          path: ./login-MacOS
 
   release-project:
     name: Release project
@@ -107,8 +107,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./AsgarDNS-Windows.exe
-          asset_name: AsgarDNS-Windows-v${{ github.run_number }}.exe
+          asset_path: ./login-Windows.exe
+          asset_name: login-Windows-v${{ github.run_number }}.exe
           asset_content_type: application/octet-stream
 
       - name: Upload MacoOS Release 🚀
@@ -117,8 +117,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./AsgarDNS-MacOS
-          asset_name: AsgarDNS-MacOS-v${{ github.run_number }}
+          asset_path: ./login-MacOS
+          asset_name: login-MacOS-v${{ github.run_number }}
           asset_content_type: application/octet-stream
 
       - name: Upload Ubuntu Release 🚀
@@ -127,6 +127,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./AsgarDNS-Ubuntu
-          asset_name: AsgarDNS-Ubuntu-v${{ github.run_number }}
+          asset_path: ./login-Ubuntu
+          asset_name: login-Ubuntu-v${{ github.run_number }}
           asset_content_type: application/octet-stream

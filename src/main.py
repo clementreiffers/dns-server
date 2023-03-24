@@ -28,17 +28,17 @@ def wait_until_local_dns_is_listening():
 
 def kill_app():
     set_state_dns_listening(False)
-    change_dns("8.8.8.8")
+    change_dns(GOOGLE_DNS)
     exit(0)
 
 
 class Window(QMainWindow):
-    current_dns = GOOGLE_DNS
-
     def __init__(self):
         super().__init__()
+        self.is_on = False
+        self.current_dns = GOOGLE_DNS
 
-        write_json_file(TMP_STATE, {"dns_choosen": GOOGLE_DNS, "listening": False})
+        write_json_file(TMP_STATE, {"dns_choosen": self.current_dns, "listening": False})
 
         self.setWindowIcon(QIcon("../images/icon.ico"))
         self.setWindowTitle("Python DNS changing!")
@@ -63,17 +63,20 @@ class Window(QMainWindow):
         exit_btn.clicked.connect(kill_app)
         v_layout.addWidget(exit_btn)
 
-        h_layout.addWidget(self.create_btn_dns(GOOGLE_DNS))
-        h_layout.addWidget(self.create_btn_dns(LOCALHOST))
+        on_off_btn = QPushButton("OFF")
+        on_off_btn.clicked.connect(lambda: self.change_dns_and_invoke_window())
+        h_layout.addWidget(on_off_btn)
 
         self.setCentralWidget(widget)
 
-    def create_btn_dns(self, dns):
-        btn = QPushButton(f"change system dns to : {dns}")
-        btn.clicked.connect(lambda: self.change_dns_and_invoke_window(dns))
-        return btn
+    # def create_btn_dns(self, dns):
+    #     btn = QPushButton(f"change system dns to : {dns}")
+    #     btn.clicked.connect(lambda: self.change_dns_and_invoke_window(dns))
+    #     return btn
 
-    def change_dns_and_invoke_window(self, dns):
+    def change_dns_and_invoke_window(self):
+        self.is_on = not self.is_on
+        dns = LOCALHOST if self.is_on else GOOGLE_DNS
         set_state_dns_choosen(dns)
         self.current_dns = dns
         self.label_current_dns.setText(f"current dns : {self.current_dns}")

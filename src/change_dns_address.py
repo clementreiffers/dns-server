@@ -2,19 +2,12 @@ import ctypes
 import os
 import sys
 
-from constants import GOOGLE_DNS
-from fs import set_state_dns_listening
-
 
 def is_admin():
     return ctypes.windll.shell32.IsUserAnAdmin()
 
 
 def change_dns(dns):
-    if dns == GOOGLE_DNS:
-        set_state_dns_listening(False)
-
-    print(f"changing dns to {dns}...")
     os.system(f'netsh interface ip set dns name="Wi-Fi" static {dns}')
 
 

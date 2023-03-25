@@ -53,10 +53,10 @@ class Window(QMainWindow):
         v_layout = QVBoxLayout()
         widget.setLayout(v_layout)
 
-        self.label_current_dns = QLabel(self, objectName="currentDns")
+        self.label_current_dns = QLabel(self)
         # label_current_dns.setFrameStyle(QFrame.Panel | QFrame.Sunken)
         self.label_current_dns.setText(f"current dns : {self.current_dns}")
-        self.label_current_dns.setMaximumSize(self.size().width(), 10)
+        self.label_current_dns.setMaximumSize(self.size().width(), self.size().height())
         self.label_current_dns.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         v_layout.addWidget(self.label_current_dns)
 

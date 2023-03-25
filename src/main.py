@@ -44,8 +44,8 @@ class Window(QMainWindow):
 
         write_json_file(TMP_STATE, {"dns_choosen": self.current_dns, "listening": False})
 
-        self.setWindowIcon(QIcon("../images/icon.ico"))
-        self.setWindowTitle("Python DNS changing!")
+        self.setWindowIcon(QIcon("../images/icon.png"))
+        self.setWindowTitle("AsgarDNS")
         self.resize(400, 200)
 
         widget = QWidget(self)

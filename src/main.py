@@ -35,8 +35,12 @@ def kill_app():
 class Window(QMainWindow):
     def __init__(self):
         super().__init__()
+        with open("stylesheet.css", "r") as f:
+            self.style = f.read()
+        self.setStyleSheet(self.style)
         self.is_on = False
         self.current_dns = GOOGLE_DNS
+        self.objectName = "mainWindow"
 
         write_json_file(TMP_STATE, {"dns_choosen": self.current_dns, "listening": False})
 
@@ -49,7 +53,7 @@ class Window(QMainWindow):
         v_layout = QVBoxLayout()
         widget.setLayout(v_layout)
 
-        self.label_current_dns = QLabel(self)
+        self.label_current_dns = QLabel(self, objectName="currentDns")
         # label_current_dns.setFrameStyle(QFrame.Panel | QFrame.Sunken)
         self.label_current_dns.setText(f"current dns : {self.current_dns}")
         self.label_current_dns.setMaximumSize(self.size().width(), 10)
@@ -59,24 +63,23 @@ class Window(QMainWindow):
         h_layout = QHBoxLayout()
         v_layout.addLayout(h_layout)
 
-        exit_btn = QPushButton("EXIT")
+        exit_btn = QPushButton("EXIT", objectName="exit")
         exit_btn.clicked.connect(kill_app)
         v_layout.addWidget(exit_btn)
 
-        on_off_btn = QPushButton("OFF")
-        on_off_btn.clicked.connect(lambda: self.change_dns_and_invoke_window())
-        h_layout.addWidget(on_off_btn)
+        self.on_off_btn = QPushButton("Off", objectName="off")
+        self.on_off_btn.clicked.connect(lambda: self.change_dns_and_invoke_window())
+        h_layout.addWidget(self.on_off_btn)
 
         self.setCentralWidget(widget)
 
-    # def create_btn_dns(self, dns):
-    #     btn = QPushButton(f"change system dns to : {dns}")
-    #     btn.clicked.connect(lambda: self.change_dns_and_invoke_window(dns))
-    #     return btn
-
     def change_dns_and_invoke_window(self):
         self.is_on = not self.is_on
-        dns = LOCALHOST if self.is_on else GOOGLE_DNS
+        if self.is_on:
+            dns = self.change_on_off("on", LOCALHOST)
+        else:
+            dns = self.change_on_off("off", GOOGLE_DNS)
+
         set_state_dns_choosen(dns)
         self.current_dns = dns
         self.label_current_dns.setText(f"current dns : {self.current_dns}")
@@ -87,6 +90,14 @@ class Window(QMainWindow):
         msg = QMessageBox()
         msg.setText(f"dns changed to : {dns} !")
         msg.exec()
+
+    def change_on_off(self, btnValue, dns):
+        self.on_off_btn.setText(btnValue.capitalize())
+        self.on_off_btn.setStyleSheet(
+            f"background-color: {'green' if btnValue == 'on' else '#a91515'};"
+        )
+        # self.on_off_btn.setStyleSheet(self.style)
+        return dns
 
     def closeEvent(self, event):
         kill_app()

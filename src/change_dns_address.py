@@ -9,6 +9,8 @@ def is_admin():
 
 def change_dns(dns):
     os.system(f'netsh interface ip set dns name="Wi-Fi" static {dns}')
+    os.system(f'netsh interface ip set dns name="Ethernet" static {dns}')
+    os.system(f'netsh interface ip set dns name="Ethernet 2" static {dns}')
 
 
 def restart_as_admin():

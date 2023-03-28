@@ -6,7 +6,7 @@ run:
 	python3 main.py
 
 build-app:
-	pyinstaller --onefile  src/main.py --icon=images/logo.ico --noconsole --uac-admin
+	pyinstaller --onefile  src/main.py --icon=images/new_logo.ico --noconsole --uac-admin
 
 macos-build-app:
 	pyinstaller --onefile  src/main.py --icon=images/logo.icns --noconsole --uac-admin

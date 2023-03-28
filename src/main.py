@@ -1,3 +1,4 @@
+import ctypes
 import sys
 from threading import Thread
 
@@ -44,7 +45,7 @@ class Window(QMainWindow):
 
         write_json_file(TMP_STATE, {"dns_choosen": self.current_dns, "listening": False})
 
-        self.setWindowIcon(QIcon("../images/icon.png"))
+        self.setWindowIcon(QIcon("../images/new_logo.ico"))
         self.setWindowTitle("AsgarDNS")
         self.resize(400, 200)
 
@@ -119,5 +120,6 @@ def start_daemon(f):
 if __name__ == "__main__":
     start_daemon(launch_dns)
     start_daemon(launch_watchdog)
-    change_dns("8.8.8.8")
+    change_dns(GOOGLE_DNS)
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("asgardns.1.0.1")
     launch_gui()
